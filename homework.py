@@ -48,7 +48,10 @@ class Training:
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
 
-        return InfoMessage('Training', self.duration,
+        return self.createInfoMessage('Training')
+
+    def createInfoMessage(self, name: str) -> InfoMessage:
+        return InfoMessage(name, self.duration,
                            self.get_distance(), self.get_mean_speed(),
                            self.get_spent_calories())
 
@@ -72,9 +75,7 @@ class Running(Training):
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
 
-        return InfoMessage('Running', self.duration,
-                           self.get_distance(), self.get_mean_speed(),
-                           self.get_spent_calories())
+        return self.createInfoMessage('Running')
 
 
 class SportsWalking(Training):
@@ -102,9 +103,7 @@ class SportsWalking(Training):
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
 
-        return InfoMessage('SportsWalking', self.duration,
-                           self.get_distance(), self.get_mean_speed(),
-                           self.get_spent_calories())
+        return self.createInfoMessage('SportsWalking')
 
 
 class Swimming(Training):
@@ -136,9 +135,7 @@ class Swimming(Training):
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
 
-        return InfoMessage('Swimming', self.duration,
-                           self.get_distance(), self.get_mean_speed(),
-                           self.get_spent_calories())
+        return self.createInfoMessage('Swimming')
 
 
 def read_package(workout_type: str, data: list) -> Training:
