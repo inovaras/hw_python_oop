@@ -81,7 +81,7 @@ class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
 
     KMH_IN_MSEC: float = round(Training.M_IN_KM / 3600, 3)
-    CM_IN_M: float = 100
+    CM_IN_M: int = 100
     CALORIES_WEIGHT_MULTIPLIER: float = 0.035
     CALORIES_SPEED_HEIGHT_MULTIPLIER: float = 0.029
 
@@ -94,9 +94,10 @@ class SportsWalking(Training):
         """Получить количество затраченных калорий."""
 
         avg_speed_m_s = self.get_mean_speed() * self.KMH_IN_MSEC
-        return ((0.035 * self.weight + avg_speed_m_s**2
-                / (self.height / self.CM_IN_M) * 0.029 * self.weight)
-                * self.duration * 60)
+        return ((self.CALORIES_WEIGHT_MULTIPLIER * self.weight
+                 + avg_speed_m_s**2 / (self.height / self.CM_IN_M)
+                 * self.CALORIES_SPEED_HEIGHT_MULTIPLIER * self.weight)
+                * self.duration * Training.MIN_IN_H)
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
