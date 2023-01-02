@@ -94,9 +94,9 @@ class SportsWalking(Training):
         """Получить количество затраченных калорий."""
 
         avg_speed_m_s = self.get_mean_speed() * self.KMH_IN_MSEC
-
-        return ((0.035 * self.weight + avg_speed_m_s**2 / (self.height/self.CM_IN_M)
-                * 0.029 * self.weight) * self.duration * 60)
+        return ((0.035 * self.weight + avg_speed_m_s**2
+                / (self.height / self.CM_IN_M) * 0.029 * self.weight)
+                * self.duration * 60)
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
