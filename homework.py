@@ -48,9 +48,9 @@ class Training:
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
 
-        return self.createInfoMessage('Training')
+        return self.create_info_message('Training')
 
-    def createInfoMessage(self, name: str) -> InfoMessage:
+    def create_info_message(self, name: str) -> InfoMessage:
         return InfoMessage(name, self.duration,
                            self.get_distance(), self.get_mean_speed(),
                            self.get_spent_calories())
@@ -62,9 +62,6 @@ class Running(Training):
     CALORIES_MEAN_SPEED_MULTIPLIER: int = 18
     CALORIES_MEAN_SPEED_SHIFT: float = 1.79
 
-    def __init__(self, action: int, duration: float, weight: float) -> None:
-        super().__init__(action, duration, weight)
-
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
 
@@ -75,7 +72,7 @@ class Running(Training):
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
 
-        return self.createInfoMessage('Running')
+        return self.create_info_message('Running')
 
 
 class SportsWalking(Training):
@@ -95,15 +92,17 @@ class SportsWalking(Training):
         """Получить количество затраченных калорий."""
 
         avg_speed_m_s = self.get_mean_speed() * self.KMH_IN_MSEC
-        return ((self.CALORIES_WEIGHT_MULTIPLIER * self.weight
-                 + avg_speed_m_s**2 / (self.height / self.CM_IN_M)
-                 * self.CALORIES_SPEED_HEIGHT_MULTIPLIER * self.weight)
-                * self.duration * Training.MIN_IN_H)
+        return (
+               (self.CALORIES_WEIGHT_MULTIPLIER * self.weight
+                + avg_speed_m_s**2 / (self.height / self.CM_IN_M)
+                * self.CALORIES_SPEED_HEIGHT_MULTIPLIER * self.weight)
+            * self.duration * Training.MIN_IN_H
+        )
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
 
-        return self.createInfoMessage('SportsWalking')
+        return self.create_info_message('SportsWalking')
 
 
 class Swimming(Training):
@@ -135,7 +134,7 @@ class Swimming(Training):
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
 
-        return self.createInfoMessage('Swimming')
+        return self.create_info_message('Swimming')
 
 
 def read_package(workout_type: str, data: list) -> Training:
