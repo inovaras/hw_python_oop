@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Type
 
 
 class InfoMessage:
@@ -143,10 +143,35 @@ class Swimming(Training):
 def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
 
-    training_types: Dict[str, training] = {'SWM': Swimming,
-                                           'RUN': Running,
-                                           'WLK': SportsWalking}
+    training_types: Dict[str, training: Type[Training]] = {'SWM': Swimming,
+                                                           'RUN': Running,
+                                                           'WLK': SportsWalking,
+                                                           'CAT': Cat,
+                                                           'DANCE': Dance,
+                                                           'NO_TYPE': None}
     return training_types[workout_type](*data)
+
+
+class Cat:
+    def __init__(self, height: int, weight: int) -> None:
+        self.height = height
+        self.weight = weight
+
+
+class Dance:
+    def __init__(
+            self,
+            training_type: str,
+            duration: float,
+            distance: float,
+            speed: float,
+            calories: float,
+    ) -> None:
+        self.training_type = training_type
+        self.duration = duration
+        self.distance = distance
+        self.speed = speed
+        self.calories = calories
 
 
 def main(training) -> None:
@@ -161,8 +186,19 @@ if __name__ == '__main__':
         ('SWM', [720, 1, 80, 25, 40]),
         ('RUN', [15000, 1, 75]),
         ('WLK', [9000, 1, 75, 180]),
+        ('DANCE', [7000, 2, 75, 180]),
+        ('CAT', [77, 1, 250, 200]),
+        ('INVALID_TYPE', [])
     ]
 
     for workout_type, data in packages:
-        training = read_package(workout_type, data)
-        main(training)
+        try:
+            training = read_package(workout_type, data)
+            main(training)
+        except KeyError:
+            print(f'Тренировки {workout_type} нет в фитнес-трекере :(')
+        except TypeError:
+            print(f'{workout_type} не является тренировкой :)')
+        except AttributeError:
+            print(f'{workout_type} нет возможности показать '
+                  f'информацию по тренировке ')
