@@ -1,11 +1,19 @@
-from typing import Type, Dict, List
+from typing import Dict
+from typing import List
+from typing import Type
 
 
 class InfoMessage:
     """Информационное сообщение о тренировке."""
 
-    def __init__(self, training_type: str, duration: float, distance: float,
-                 speed: float, calories: float) -> None:
+    def __init__(
+        self,
+        training_type: str,
+        duration: float,
+        distance: float,
+        speed: float,
+        calories: float,
+    ) -> None:
         self.training_type = training_type
         self.duration = duration
         self.distance = distance
@@ -15,11 +23,13 @@ class InfoMessage:
     def get_message(self) -> str:
         """Получить результаты тренировки."""
 
-        return (f'Тип тренировки: {self.training_type};'
-                f' Длительность: {self.duration :.3f} ч.;'
-                f' Дистанция: {self.distance :.3f} км;'
-                f' Ср. скорость: {self.speed :.3f} км/ч;'
-                f' Потрачено ккал: {self.calories :.3f}.')
+        return (
+            f'Тип тренировки: {self.training_type};'
+            f' Длительность: {self.duration :.3f} ч.;'
+            f' Дистанция: {self.distance :.3f} км;'
+            f' Ср. скорость: {self.speed :.3f} км/ч;'
+            f' Потрачено ккал: {self.calories :.3f}.'
+        )
 
 
 class Training:
@@ -46,7 +56,9 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        pass
+        raise NotImplementedError(
+            'Определите get_spent_calories в %s.' % self.__class__.__name__
+        )
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -54,9 +66,13 @@ class Training:
         return self.create_info_message('Training')
 
     def create_info_message(self, name: str) -> InfoMessage:
-        return InfoMessage(name, self.duration,
-                           self.get_distance(), self.get_mean_speed(),
-                           self.get_spent_calories())
+        return InfoMessage(
+            name,
+            self.duration,
+            self.get_distance(),
+            self.get_mean_speed(),
+            self.get_spent_calories(),
+        )
 
 
 class Running(Training):
@@ -68,9 +84,16 @@ class Running(Training):
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
 
-        return ((self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
-                 + self.CALORIES_MEAN_SPEED_SHIFT) * self.weight / self.M_IN_KM
-                * self.duration * self.MIN_IN_H)
+        return (
+            (
+                self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
+                + self.CALORIES_MEAN_SPEED_SHIFT
+            )
+            * self.weight
+            / self.M_IN_KM
+            * self.duration
+            * self.MIN_IN_H
+        )
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -86,8 +109,9 @@ class SportsWalking(Training):
     CALORIES_WEIGHT_MULTIPLIER: float = 0.035
     CALORIES_SPEED_HEIGHT_MULTIPLIER: float = 0.029
 
-    def __init__(self, action: int, duration: float, weight: float,
-                 height: float) -> None:
+    def __init__(
+        self, action: int, duration: float, weight: float, height: float
+    ) -> None:
         super().__init__(action, duration, weight)
         self.height = height
 
@@ -96,10 +120,15 @@ class SportsWalking(Training):
 
         avg_speed_m_s = self.get_mean_speed() * self.KMH_IN_MSEC
         return (
-               (self.CALORIES_WEIGHT_MULTIPLIER * self.weight
-                + avg_speed_m_s**2 / (self.height / self.CM_IN_M)
-                * self.CALORIES_SPEED_HEIGHT_MULTIPLIER * self.weight)
-            * self.duration * Training.MIN_IN_H
+            (
+                self.CALORIES_WEIGHT_MULTIPLIER * self.weight
+                + avg_speed_m_s**2
+                / (self.height / self.CM_IN_M)
+                * self.CALORIES_SPEED_HEIGHT_MULTIPLIER
+                * self.weight
+            )
+            * self.duration
+            * Training.MIN_IN_H
         )
 
     def show_training_info(self) -> InfoMessage:
@@ -115,8 +144,14 @@ class Swimming(Training):
     CALORIES_MEAN_SPEED_MULTIPLIER = 2
     CALORIES_MEAN_SPEED_SHIFT = 1.1
 
-    def __init__(self, action: int, duration: float, weight: float,
-                 length_pool: int, count_pool: int) -> None:
+    def __init__(
+        self,
+        action: int,
+        duration: float,
+        weight: float,
+        length_pool: int,
+        count_pool: int,
+    ) -> None:
         super().__init__(action, duration, weight)
         self.length_pool = length_pool
         self.count_pool = count_pool
@@ -124,15 +159,19 @@ class Swimming(Training):
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
 
-        return (self.length_pool * self.count_pool
-                / self.M_IN_KM / self.duration)
+        return (
+            self.length_pool * self.count_pool / self.M_IN_KM / self.duration
+        )
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
 
-        return ((self.get_mean_speed() + self.CALORIES_MEAN_SPEED_SHIFT)
-                * self.CALORIES_MEAN_SPEED_MULTIPLIER * self.weight
-                * self.duration)
+        return (
+            (self.get_mean_speed() + self.CALORIES_MEAN_SPEED_SHIFT)
+            * self.CALORIES_MEAN_SPEED_MULTIPLIER
+            * self.weight
+            * self.duration
+        )
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -143,9 +182,14 @@ class Swimming(Training):
 def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
 
-    training_types: Dict[str, training: Type[Training]] = (
-        {'SWM': Swimming, 'RUN': Running, 'WLK': SportsWalking, 'CAT': Cat,
-         'DANCE': Dance, 'NO_TYPE': None})
+    training_types: Dict[str, training: Type[Training]] = {
+        'SWM': Swimming,
+        'RUN': Running,
+        'WLK': SportsWalking,
+        'CAT': Cat,
+        'DANCE': Dance,
+        'NO_TYPE': None,
+    }
     return training_types[workout_type](*data)
 
 
@@ -157,12 +201,12 @@ class Cat:
 
 class Dance:
     def __init__(
-            self,
-            training_type: str,
-            duration: float,
-            distance: float,
-            speed: float,
-            calories: float,
+        self,
+        training_type: str,
+        duration: float,
+        distance: float,
+        speed: float,
+        calories: float,
     ) -> None:
         self.training_type = training_type
         self.duration = duration
@@ -185,7 +229,7 @@ if __name__ == '__main__':
         ('WLK', [9000, 1, 75, 180]),
         ('DANCE', [7000, 2, 75, 180]),
         ('CAT', [77, 1, 250, 200]),
-        ('INVALID_TYPE', [])
+        ('INVALID_TYPE', []),
     ]
 
     for workout_type, data in packages:
@@ -193,9 +237,17 @@ if __name__ == '__main__':
             training = read_package(workout_type, data)
             main(training)
         except KeyError:
-            print(f'Тренировки {workout_type} нет в фитнес-трекере :(')
+            print(
+                f'Ошибка: {KeyError}. Тренировки {workout_type}'
+                f' нет в фитнес-трекере :('
+            )
         except TypeError:
-            print(f'{workout_type} не является тренировкой :)')
-        except AttributeError:
-            print(f'{workout_type} нет возможности показать '
-                  f'информацию по тренировке ')
+            print(
+                f'Ошибка: {TypeError}.'
+                f' {workout_type} не является тренировкой :)'
+            )
+        except AttributeError as AttrE:
+            print(
+                f'Ошибка: {AttrE}. {workout_type} нет возможности показать'
+                f' информацию по тренировке '
+            )
