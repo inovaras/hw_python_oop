@@ -236,18 +236,15 @@ if __name__ == '__main__':
         try:
             training = read_package(workout_type, data)
             main(training)
-        except KeyError:
+        except KeyError as exc:
             print(
-                f'Ошибка: {KeyError}. Тренировки {workout_type}'
-                f' нет в фитнес-трекере :('
+                f'Тренировки {exc} нет в фитнес-трекере :)'
             )
-        except TypeError:
+        except TypeError as exc:
             print(
-                f'Ошибка: {TypeError}.'
-                f' {workout_type} не является тренировкой :)'
+                f'Тренировки {exc} нет в фитнес-трекере :)'
             )
-        except AttributeError as AttrE:
+        except AttributeError as exc:
             print(
-                f'Ошибка: {AttrE}. {workout_type} нет возможности показать'
-                f' информацию по тренировке '
+                f'{exc} нет возможности показать информацию по тренировке '
             )
